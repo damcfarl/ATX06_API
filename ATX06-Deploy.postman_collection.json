@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "1e80ec27-b42c-4adf-be58-ce771a28d41e",
+		"name": "ATX06-Deploy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "462d7666-30e9-4222-84a5-4d106c1d6524",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{msoUser}}\",\n    \"password\": \"{{msoPWD}}\"\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}auth/login",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Sites",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19bd75d5-0515-42de-89f2-fb0b10321bb6",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"jsonData.sites.forEach(function(site) {",
+							"    if (site.name == \"site1\") {",
+							"        postman.setEnvironmentVariable(\"site1_id\", jsonData.sites[0].id);",
+							"    } else if (site.name == \"site2\") {",
+							"        postman.setEnvironmentVariable(\"site2_id\", jsonData.sites[1].id);",
+							"    }",
+							"})",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}sites",
+					"host": [
+						"{{url}}sites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7dbc2f27-8038-44f1-8e91-d96f03c557a0",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"var myUser = \"dev2232-user\"+pm.environment.get(\"msoUser\");",
+							"",
+							"jsonData.users.forEach(function(users) {",
+							"    if (users.username == myUser) {",
+							"        postman.setEnvironmentVariable(\"userID\", users.id);",
+							"    }",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{url}}users",
+					"host": [
+						"{{url}}users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Tenant - Working",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8a4c91f3-8ab4-424a-a60a-68988d44c536",
+						"exec": [
+							"tests[\"Status code is 201\"] = responseCode.code === 201;",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"tenant_id\", jsonData.id);",
+							"postman.setEnvironmentVariable(\"tenant_name\", jsonData.name);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayName\": \"Postman-T01-{{msoUser}}\",\n    \"name\": \"Postman-T01-{{msoUser}}\",\n    \"description\": \"ATX06 Postman Lab\",\n    \"siteAssociations\": [\n        {\n            \"siteId\": \"{{site1_id}}\",\n            \"securityDomains\": []\n        },\n        {\n            \"siteId\": \"{{site2_id}}\",\n            \"securityDomains\": []\n        }\n    ]\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}tenants",
+					"host": [
+						"{{url}}tenants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add New Schema",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "903765da-2457-47ff-a686-70b5c308b6b3",
+						"exec": [
+							"tests[\"Status code is 201\"] = responseCode.code === 201;",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"schema_id\", jsonData.id);",
+							"postman.setEnvironmentVariable(\"template_name\", jsonData.templates[0].name);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayName\": \"dev2232-lab2-user{{msoUser}}-schema\",\n    \"templates\": [\n        {\n            \"name\": \"dev2232-lab2-user{{msoUser}}-template\",\n            \"tenantId\": \"{{tenant_id}}\",\n            \"displayName\": \"dev2232-lab2-user{{msoUser}}-template\",\n            \"anps\": [],\n            \"contracts\": [],\n            \"vrfs\": [],\n            \"bds\": [],\n            \"filters\": [],\n            \"externalEpgs\": [],\n            \"serviceGraphs\": []\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}schemas",
+					"host": [
+						"{{url}}schemas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Existing Template",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d9aed844-a8f8-4f71-8bc5-18e0db748642",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"op\": \"replace\",\n        \"path\": \"/templates/{{template_name}}\",\n        \"value\": {\n            \"name\": \"{{template_name}}\",\n            \"displayName\": \"{{template_name}}\",\n            \"tenantId\": \"{{tenant_id}}\",\n            \"anps\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-ap\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-ap\",\n                    \"epgs\": [\n                        {\n                            \"name\": \"ATX06-user{{msoUser}}-epg\",\n                            \"displayName\": \"ATX06-user{{msoUser}}-epg\",\n                            \"proxyArp\": false,\n                            \"bdRef\": {\n                                \"schemaId\": \"{{schema_id}}\",\n                                \"templateName\": \"{{template_name}}\",\n                                \"bdName\": \"ATX06-user{{msoUser}}-bd\"\n                            },\n                            \"vrfRef\": {\n                                \"schemaId\": \"{{schema_id}}\",\n                                \"templateName\": \"{{template_name}}\",\n                                \"vrfName\": \"ATX06-user{{msoUser}}-vrf\"\n                            },\n                            \"selectors\": []\n                        }\n                    ]\n                }\n            ],\n            \"vrfs\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-vrf\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-vrf\",\n                    \"vzAnyProviderContracts\": [],\n                    \"vzAnyConsumerContracts\": []\n                }\n            ],\n            \"bds\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-bd\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-bd\",\n                    \"l2UnknownUnicast\": \"flood\",\n                    \"intersiteBumTrafficAllow\": false,\n                    \"optimizeWanBandwidth\": true,\n                    \"l2Stretch\": false,\n                    \"subnets\": [],\n                    \"vrfRef\": {\n                        \"schemaId\": \"{{schema_id}}\",\n                        \"templateName\": \"{{template_name}}\",\n                        \"vrfName\": \"ATX06-user{{msoUser}}-vrf\"\n                    }\n                }\n            ]\n        }\n    }\n]",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}schemas/{{schema_id}}",
+					"host": [
+						"{{url}}schemas"
+					],
+					"path": [
+						"{{schema_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Existing Template Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d9aed844-a8f8-4f71-8bc5-18e0db748642",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"op\": \"replace\",\n        \"path\": \"/templates/{{template_name}}\",\n        \"value\": {\n            \"name\": \"{{template_name}}\",\n            \"displayName\": \"{{template_name}}\",\n            \"tenantId\": \"{{tenant_id}}\",\n            \"anps\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-ap\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-ap\",\n                    \"epgs\": [\n                        {\n                            \"name\": \"ATX06-user{{msoUser}}-epg\",\n                            \"displayName\": \"ATX06-user{{msoUser}}-epg\",\n                            \"proxyArp\": false,\n                            \"bdRef\": {\n                                \"schemaId\": \"{{schema_id}}\",\n                                \"templateName\": \"{{template_name}}\",\n                                \"bdName\": \"ATX06-user{{msoUser}}-bd\"\n                            },\n                            \"vrfRef\": {\n                                \"schemaId\": \"{{schema_id}}\",\n                                \"templateName\": \"{{template_name}}\",\n                                \"vrfName\": \"ATX06-user{{msoUser}}-vrf\"\n                            },\n                            \"selectors\": []\n                        }\n                    ]\n                }\n            ],\n            \"vrfs\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-vrf\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-vrf\",\n                    \"vzAnyProviderContracts\": [],\n                    \"vzAnyConsumerContracts\": []\n                }\n            ],\n            \"bds\": [\n                {\n                    \"name\": \"ATX06-user{{msoUser}}-bd\",\n                    \"displayName\": \"ATX06-user{{msoUser}}-bd\",\n                    \"l2UnknownUnicast\": \"flood\",\n                    \"intersiteBumTrafficAllow\": false,\n                    \"optimizeWanBandwidth\": true,\n                    \"l2Stretch\": false,\n                    \"subnets\": [],\n                    \"vrfRef\": {\n                        \"schemaId\": \"{{schema_id}}\",\n                        \"templateName\": \"{{template_name}}\",\n                        \"vrfName\": \"ATX06-user{{msoUser}}-vrf\"\n                    }\n                }\n            ]\n        }\n    }\n]",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}schemas/{{schema_id}}",
+					"host": [
+						"{{url}}schemas"
+					],
+					"path": [
+						"{{schema_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Template to Sites",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8651fedd-d735-4b1a-8010-838feedb4141",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site1_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    },\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site2_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    }\n]"
+				},
+				"url": {
+					"raw": "{{url}}schemas/{{schema_id}}",
+					"host": [
+						"{{url}}schemas"
+					],
+					"path": [
+						"{{schema_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deploy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f8b0d546-8979-452b-a26f-5807e629ac1e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}execute/schema/{{schema_id}}/template/{{template_name}}",
+					"host": [
+						"{{url}}execute"
+					],
+					"path": [
+						"schema",
+						"{{schema_id}}",
+						"template",
+						"{{template_name}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "91-Delete Tenant",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}tenants/{{tenant_id}}?msc-only=false",
+					"host": [
+						"{{url}}tenants"
+					],
+					"path": [
+						"{{tenant_id}}"
+					],
+					"query": [
+						{
+							"key": "msc-only",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "91-Delete Tenant Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{tenant_id}}\"\r\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}tenants",
+					"host": [
+						"{{url}}tenants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tenants",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7dbc2f27-8038-44f1-8e91-d96f03c557a0",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"var myUser = \"dev2232-user\"+pm.environment.get(\"msoUser\");",
+							"",
+							"jsonData.users.forEach(function(users) {",
+							"    if (users.username == myUser) {",
+							"        postman.setEnvironmentVariable(\"userID\", users.id);",
+							"    }",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{url}}tenants",
+					"host": [
+						"{{url}}tenants"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
