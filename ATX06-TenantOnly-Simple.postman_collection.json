@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "23049470-4ce7-456d-ad38-ed66a78dedfa",
+		"name": "ATX06-TenantOnly-Simple",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "462d7666-30e9-4222-84a5-4d106c1d6524",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"cisco!123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://14.2.172.143/api/v1/auth/login",
+					"protocol": "https",
+					"host": [
+						"14",
+						"2",
+						"172",
+						"143"
+					],
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Tenant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8a4c91f3-8ab4-424a-a60a-68988d44c536",
+						"exec": [
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://14.2.172.143/api/v1/tenants",
+					"protocol": "https",
+					"host": [
+						"14",
+						"2",
+						"172",
+						"143"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tenants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Sites",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19bd75d5-0515-42de-89f2-fb0b10321bb6",
+						"exec": [
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://14.2.172.143/api/v1/sites",
+					"protocol": "https",
+					"host": [
+						"14",
+						"2",
+						"172",
+						"143"
+					],
+					"path": [
+						"api",
+						"v1",
+						"sites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "91-Delete Tenant Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{tenant_id}}\"\r\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{url}}tenants",
+					"host": [
+						"{{url}}tenants"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
