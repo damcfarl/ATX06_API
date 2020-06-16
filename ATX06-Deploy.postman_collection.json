@@ -203,7 +203,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "",
+					"options": {
+						"raw": {}
+					}
 				},
 				"url": {
 					"raw": "{{url}}sites",
@@ -292,7 +295,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"displayName\": \"dev2232-lab2-user{{msoUser}}-schema\",\n    \"templates\": [\n        {\n            \"name\": \"dev2232-lab2-user{{msoUser}}-template\",\n            \"tenantId\": \"{{tenant_id}}\",\n            \"displayName\": \"dev2232-lab2-user{{msoUser}}-template\",\n            \"anps\": [],\n            \"contracts\": [],\n            \"vrfs\": [],\n            \"bds\": [],\n            \"filters\": [],\n            \"externalEpgs\": [],\n            \"serviceGraphs\": []\n        }\n    ]\n}",
+					"raw": "{\n    \"displayName\": \"Postman-T01-user{{msoUser}}-schema\",\n    \"templates\": [\n        {\n            \"name\": \"Postman-T01-user{{msoUser}}-template\",\n            \"tenantId\": \"{{tenant_id}}\",\n            \"displayName\": \"Postman-T01-user{{msoUser}}-template\",\n            \"anps\": [],\n            \"contracts\": [],\n            \"vrfs\": [],\n            \"bds\": [],\n            \"filters\": [],\n            \"externalEpgs\": [],\n            \"serviceGraphs\": []\n        }\n    ]\n}",
 					"options": {
 						"raw": {}
 					}
@@ -381,10 +384,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site1_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    },\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site2_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    }\n]",
-					"options": {
-						"raw": {}
-					}
+					"raw": "[\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site1_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    },\n    {\n        \"op\": \"add\",\n        \"path\": \"/sites/-\",\n        \"value\": {\n            \"siteId\": \"{{site2_id}}\",\n            \"templateName\": \"{{template_name}}\"\n        }\n    }\n]"
 				},
 				"url": {
 					"raw": "{{url}}schemas/{{schema_id}}",
@@ -429,10 +429,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {}
-					}
+					"raw": ""
 				},
 				"url": {
 					"raw": "{{url}}execute/schema/{{schema_id}}/template/{{template_name}}",
